@@ -1,0 +1,60 @@
+steps:
+- id: 'branch name'
+  name: 'alpine'
+  entrypoint: 'sh'  
+  args: 
+  - '-c'
+  - | 
+      echo "***********************"
+      echo "$BRANCH_NAME"
+      echo `pwd`/*
+      echo "***********************"
+      echo "##########jagan##############"
+# https://github.com/GoogleCloudPlatform/solutions-terraform-cloudbuild-gitops/blob/dev/cloudbuild.yaml
+
+- id: 'tf init'
+  name: 'hashicorp/terraform:1.0.0'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - |
+      echo `pwd`
+      echo "************************************************************************************************************************************"
+      echo `starting tf-init for all folders`
+      for dir in /home/avengergcp/admin/*
+      do 
+        echo ${dir}    
+        cd ${dir}   
+        terraform init
+      done
+- id: 'tf plan'
+  name: 'hashicorp/terraform:1.0.0'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - | 
+      echo "************************************************************************************************************************************"
+      echo `starting tf-plan for all folders`
+      for dir in /home/avengergcp/admin/*
+      do 
+        echo ${dir}    
+        cd ${dir}   
+        terraform plan
+      done
+# [END tf-plan]
+
+- id: 'tf apply'
+  name: 'hashicorp/terraform:1.0.0'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - | 
+      echo "************************************************************************************************************************************"
+      echo `starting tf-apply for all folders`
+      for dir in /home/avengergcp/admin/*
+      do 
+        echo ${dir}    
+        cd ${dir}   
+        terraform apply
+      done
+# [END tf-plan]
